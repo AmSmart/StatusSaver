@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="StatusSaver.Views.VideosPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:effects="clr-namespace:StatusSaver.Effects"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="root"
+    Title="Videos"
+    mc:Ignorable="d">
+
+    <ContentPage.ToolbarItems>
+        <!--<ToolbarItem Command="{Binding Save}" Text="Save" />
+        <ToolbarItem Command="{Binding SaveAs}" Text="Save As" />
+        <ToolbarItem Command="{Binding JoinAndSave}" Text="Join and Save" />
+        <ToolbarItem Command="{Binding Cancel}" Text="Cancel" />-->
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <RefreshView Command="{Binding RefreshList}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView
+                x:Name="colView"
+                BackgroundColor="{Binding BackgroundColor}"
+                ItemsLayout="VerticalGrid, 2"
+                ItemsSource="{Binding Videos}"
+                SelectedItems="{Binding SelectedItems, Mode=OneWay}"
+                SelectionChangedCommand="{Binding SelectionChanged}"
+                SelectionMode="{Binding SelectionMode}">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10" BackgroundColor="{Binding BackgroundColor}">
+                            <Image
+                                effects:LongPressedEffect.Command="{Binding Source={x:Reference root}, Path=BindingContext.LongPressed}"
+                                effects:LongPressedEffect.CommandParameter="{Binding .}"
+                                effects:PressedEffect.Command="{Binding Source={x:Reference root}, Path=BindingContext.SingleTap}"
+                                effects:PressedEffect.CommandParameter="{Binding .}"
+                                Aspect="AspectFill"
+                                Source="{Binding ImageCachePath}">
+                                <Image.Effects>
+                                    <effects:LongPressedEffect />
+                                    <effects:PressedEffect />
+                                </Image.Effects>
+                            </Image>
+
+                            <Image
+                                HorizontalOptions="Center"
+                                InputTransparent="True"
+                                Scale="0.5"
+                                Source="play.png"
+                                VerticalOptions="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>
