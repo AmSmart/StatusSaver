@@ -37,6 +37,11 @@
     <EnableLLVM>false</EnableLLVM>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>C:\Users\Engineer Smart\AppData\Local\Xamarin\Mono for Android\Keystore\SmartEmma\SmartEmma.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>SmartEmma</AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>SmartEmma</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>SmartEmma</AndroidSigningKeyPass>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,8 +66,8 @@
     <PackageReference Include="Xamarin.Android.Binding.Mp4Parser">
       <Version>1.1.22</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2083" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyServices\MessengerAndroid.cs" />

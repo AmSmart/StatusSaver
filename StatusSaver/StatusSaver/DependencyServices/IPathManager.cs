@@ -13,6 +13,7 @@ namespace StatusSaver.DependencyServices
         string GetAppCachePath();
         string GetImagesStoragePath();
         string GetVideosStoragePath();
-        string GetStatusResourcesPath();
+        IEnumerable<string> GetStatusResourcesPaths();
+        bool GetAllFilesAccess();
     }
 }

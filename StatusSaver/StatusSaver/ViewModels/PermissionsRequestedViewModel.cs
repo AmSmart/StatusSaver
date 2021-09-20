@@ -1,4 +1,5 @@
 ﻿using MvvmHelpers;
+using StatusSaver.DependencyServices;
 using StatusSaver.Views;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,13 @@ namespace StatusSaver.ViewModels
 {
     public class PermissionsRequestedViewModel : BaseViewModel
     {
+        private readonly IPathManager _pathManager;
         private bool _permissionsGranted;
 
-        public PermissionsRequestedViewModel()
+        public PermissionsRequestedViewModel(IPathManager pathManager)
         {
             GrantPermissions = new Command(async () => await OnGrantPermissions());
+            _pathManager = pathManager;
         }
 
         public ICommand GrantPermissions { get; set; }
@@ -34,6 +37,8 @@ namespace StatusSaver.ViewModels
 
             var writePermissionStatus = await Permissions.RequestAsync<Permissions.StorageWrite>();
 
+            var manageAllAccess = _pathManager.GetAllFilesAccess();
+
             if (readPermissionStatus != PermissionStatus.Granted)
             {
                 readPermissionStatus = await Permissions.RequestAsync<Permissions.StorageRead>();
@@ -45,7 +50,8 @@ namespace StatusSaver.ViewModels
             }
 
 
-            if (readPermissionStatus == PermissionStatus.Granted && writePermissionStatus == PermissionStatus.Granted)
+            if (readPermissionStatus == PermissionStatus.Granted && writePermissionStatus == PermissionStatus.Granted
+                && manageAllAccess)
             {
                 Application.Current.MainPage = new AppShell();
             }
