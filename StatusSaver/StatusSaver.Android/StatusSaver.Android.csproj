@@ -81,8 +81,7 @@
     <Compile Include="DependencyServices\PathManagerAndroid.cs" />
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Artifacts\com.smart.statussaver.apk" />
+  <ItemGroup>    
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
