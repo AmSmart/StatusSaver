@@ -28,7 +28,7 @@ namespace StatusSaver.ViewModels
         private SelectionMode _selectionMode;
         private readonly Color _selectedStateColor = Color.DodgerBlue;
         private readonly Color _unselectedStateColor = Color.White;
-        private readonly string _statusResourcesPath;
+        private readonly IEnumerable<string> _statusResourcesPaths;
         private readonly IList<ToolbarItem> _toolbarItems;
 
         public ImagesPageViewModel(IPathManager pathManager, IPageManager pageManager,
@@ -65,7 +65,7 @@ namespace StatusSaver.ViewModels
                 }
             };
 
-            _statusResourcesPath = pathManager.GetStatusResourcesPath();
+            _statusResourcesPaths = pathManager.GetStatusResourcesPaths();
 
             Task.Run(() =>
             {
@@ -88,8 +88,17 @@ namespace StatusSaver.ViewModels
 
         private void LoadData()
         {
-            IEnumerable<string> allImageUrls = Directory.GetFiles(_statusResourcesPath)
-                            .Where(x => x.EndsWith(".jpg"));
+            List<string> allImageUrls = new List<string>();
+
+            foreach (var path in _statusResourcesPaths)
+            {
+                if (Directory.Exists(path))
+                {
+                    var files = Directory.GetFiles(path);//.Where(x => x.EndsWith(".jpg"));
+                    allImageUrls.AddRange(files);
+                }
+            }
+            
             Images.Clear();
             foreach (string url in allImageUrls)
             {

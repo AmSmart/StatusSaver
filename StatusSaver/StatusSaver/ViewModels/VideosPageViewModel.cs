@@ -29,7 +29,7 @@ namespace StatusSaver.ViewModels
         private bool _isRefreshing;
         private readonly Color _selectedStateColor = Color.DodgerBlue;
         private readonly Color _unselectedStateColor = Color.White;
-        private readonly string _statusResourcesPath;
+        private readonly IEnumerable<string> _statusResourcesPaths;
         private readonly string _appCachePath;
         private readonly IList<ToolbarItem> _toolbarItems;
 
@@ -74,7 +74,7 @@ namespace StatusSaver.ViewModels
                 }
             };
 
-            _statusResourcesPath = pathManager.GetStatusResourcesPath();
+            _statusResourcesPaths = pathManager.GetStatusResourcesPaths();
             _appCachePath = pathManager.GetAppCachePath();
 
             Task.Run(() =>
@@ -100,8 +100,16 @@ namespace StatusSaver.ViewModels
 
         private void LoadData(IThumbnailGenerator thumbnailGenerator)
         {
-            IEnumerable<string> allVideoUrls = Directory.GetFiles(_statusResourcesPath)
-                            .Where(x => x.EndsWith(".mp4"));
+            List<string> allVideoUrls = new List<string>();
+            foreach (var path in _statusResourcesPaths)
+            {
+                if (Directory.Exists(path))
+                {
+                    var files = Directory.GetFiles(path).Where(x => x.EndsWith(".mp4"));
+                    allVideoUrls.AddRange(files);
+                }
+            }
+             
             Videos.Clear();
             foreach (string url in allVideoUrls)
             {

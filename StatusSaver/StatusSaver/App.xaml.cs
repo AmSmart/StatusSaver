@@ -17,7 +17,7 @@ namespace StatusSaver
         {
             InitializeComponent();
             Startup.Initialise();            
-            Device.SetFlags(new string[] { "MediaElement_Experimental", "CarouselView_Experimental" });
+            Device.SetFlags(new string[] { "CarouselView_Experimental" });
         }
 
         protected override async void OnStart()
