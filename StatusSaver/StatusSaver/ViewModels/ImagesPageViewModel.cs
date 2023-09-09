@@ -24,15 +24,14 @@ namespace StatusSaver.ViewModels
 
         private readonly IPageManager _pageManager;
         private readonly IMediaManager _mediaManager;
-        private readonly IMessenger _message;
+        private readonly IMessenger _messenger;
         private SelectionMode _selectionMode;
         private readonly Color _selectedStateColor = Color.DodgerBlue;
         private readonly Color _unselectedStateColor = Color.White;
-        private readonly IEnumerable<string> _statusResourcesPaths;
         private readonly IList<ToolbarItem> _toolbarItems;
 
-        public ImagesPageViewModel(IPathManager pathManager, IPageManager pageManager,
-            IMediaManager mediaManager, IMessenger message)
+        public ImagesPageViewModel(IPageManager pageManager, IMediaManager mediaSaver,
+            IMessenger message)
         {
             BackgroundColor = Color.White;
             SelectionMode = SelectionMode.None;
@@ -42,7 +41,7 @@ namespace StatusSaver.ViewModels
             SaveAs = new Command(OnSaveAs);
             Cancel = new Command(OnCancel);
             RefreshList = new Command(OnRefresh);
-            
+
             Images = new ObservableCollection<Image>();
             SelectedItems = new ObservableCollection<object> { };
 
@@ -57,7 +56,7 @@ namespace StatusSaver.ViewModels
                 {
                     Text = "Save As",
                     Command = SaveAs
-                },                
+                },
                 new ToolbarItem()
                 {
                     Text = "Cancel",
@@ -65,49 +64,23 @@ namespace StatusSaver.ViewModels
                 }
             };
 
-            _statusResourcesPaths = pathManager.GetStatusResourcesPaths();
+            _pageManager = pageManager;
+            _mediaManager = mediaSaver;
+            _messenger = message;
 
             Task.Run(() =>
             {
-                LoadData();
+                _mediaManager.LoadImages(Images);
             });
-
-            _pageManager = pageManager;
-            _mediaManager = mediaManager;
-            _message = message;
         }
 
         private void OnRefresh(object obj)
         {
             Task.Run(() =>
             {
-                LoadData();
+                _mediaManager.LoadImages(Images);
                 IsRefreshing = false;
-            });            
-        }
-
-        private void LoadData()
-        {
-            List<string> allImageUrls = new List<string>();
-
-            foreach (var path in _statusResourcesPaths)
-            {
-                if (Directory.Exists(path))
-                {
-                    var files = Directory.GetFiles(path);//.Where(x => x.EndsWith(".jpg"));
-                    allImageUrls.AddRange(files);
-                }
-            }
-            
-            Images.Clear();
-            foreach (string url in allImageUrls)
-            {
-                Images.Add(new Image
-                {
-                    Path = url,
-                    BackgroundColor = _unselectedStateColor
-                });
-            }
+            });
         }
 
         public ObservableCollection<Image> Images { get; set; }
@@ -140,6 +113,8 @@ namespace StatusSaver.ViewModels
             set => SetProperty(ref _isRefreshing, value);
         }
 
+        public bool ReadyToClose { get; set; }
+
         public ICommand RefreshList { get; set; }
 
         public ICommand SingleTap { get; set; }
@@ -156,7 +131,7 @@ namespace StatusSaver.ViewModels
 
         private void OnSingleTap(object obj)
         {
-            if(SelectionMode == SelectionMode.Multiple)
+            if (SelectionMode == SelectionMode.Multiple)
             {
                 if (!SelectedItems.Contains(obj))
                 {
@@ -256,7 +231,7 @@ namespace StatusSaver.ViewModels
         private void OnCancel()
         {
             ClearSelection();
-            _message.LongAlert("All selections cancelled");
+            _messenger.LongAlert("All selections cancelled");
         }
 
         private void ClearSelection()
@@ -270,7 +245,7 @@ namespace StatusSaver.ViewModels
             }
         }
 
-        public async void OnBackButtonPressed()
+        public void OnBackButtonPressed()
         {
             if (SelectionMode == SelectionMode.Multiple)
             {
@@ -278,11 +253,8 @@ namespace StatusSaver.ViewModels
             }
             else
             {
-                bool exit = await _pageManager.ExitPrompt();
-                if (exit)
-                {
-                    _pageManager.PopPage();
-                }
+                ReadyToClose = true;
+                _messenger.ShortAlert("Go back again to exit");
             }
         }
     }

@@ -22,8 +22,12 @@ namespace StatusSaver.Views
         protected override bool OnBackButtonPressed()
         {
             var bc = BindingContext as VideosPageViewModel;
-            bc.OnBackButtonPressed();
-            return true;
+            if (!bc.ReadyToClose)
+            {
+                bc.OnBackButtonPressed();
+                return true;
+            }
+            return false;
         }
 
     }

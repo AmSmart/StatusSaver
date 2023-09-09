@@ -44,8 +44,7 @@ namespace StatusSaver
 
             services.AddTransient<ImageViewerViewModel>();
             services.AddTransient<MediaPlayerViewModel>();
-            services.AddTransient<PermissionsRequestedViewModel>();
-            services.AddTransient<PermissionsDeniedViewModel>();
+            services.AddTransient<PermissionsRequestViewModel>();
             
             services.AddSingleton<IMediaManager, MediaManager>();
             services.AddTransient<IPageManager, PageManager>();

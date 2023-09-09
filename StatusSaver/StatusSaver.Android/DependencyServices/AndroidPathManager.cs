@@ -11,11 +11,12 @@ using Android.Support.V4.App;
 using Android;
 using Android.Content;
 using Xamarin.Essentials;
+using Android.Provider;
 
-[assembly: Dependency(typeof(PathManagerAndroid))]
+[assembly: Dependency(typeof(AndroidPathManager))]
 namespace StatusSaver.Droid.DependencyServices
 {    
-    public class PathManagerAndroid : IPathManager
+    public class AndroidPathManager : IPathManager
     {
         private const string AppName = "Smart's Status Saver";
         private const string Images = "Images";
@@ -32,13 +33,21 @@ namespace StatusSaver.Droid.DependencyServices
         private readonly string _appCachePath;
 
 
-        public PathManagerAndroid()
+        public AndroidPathManager()
         {
-            // TODO: Migrate Storage to SAF
-            _deviceStorageDirectory = Environment.ExternalStorageDirectory.AbsolutePath;
+            if(Android.OS.Build.VERSION.SdkInt >= BuildVersionCodes.R)
+            {
+                if (!Environment.IsExternalStorageManager)
+                    (Application.Current.MainPage as Shell).GoToAsync("//requestpermission", true);
+            }
+            else
+            {
+                // TODO: Add permission for lower android versions
+            }
 
-            //_appStoragePath = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath;
-            _appStoragePath = Path.Combine(_deviceStorageDirectory, AppName);
+            _deviceStorageDirectory = Path.Combine(Environment.StorageDirectory.AbsolutePath,"emulated/0");
+
+            _appStoragePath = Platform.CurrentActivity.GetExternalMediaDirs()[0].AbsolutePath;
             _appCachePath = Path.Combine(_appStoragePath, Cache);
             _appImagesStoragePath = Path.Combine(_appStoragePath, Images);
             _appVideosStoragePath = Path.Combine(_appStoragePath, Videos);
@@ -49,7 +58,7 @@ namespace StatusSaver.Droid.DependencyServices
                 Path.Combine(_deviceStorageDirectory,WhatsAppStatusDirectory),
                 Path.Combine(_deviceStorageDirectory,WhatAppResourceDirectory,WhatsAppBusinessAndroidStatusDirectory),
                 Path.Combine(_deviceStorageDirectory,WhatsAppBusinessAndroidStatusDirectory)
-            };
+            };            
         }
 
         public List<string> WhatsAppStatusResourcesPaths { get; set; }
@@ -72,14 +81,9 @@ namespace StatusSaver.Droid.DependencyServices
         public string GetAppCachePath()
             => _appCachePath;
 
-        public bool GetAllFilesAccess()
-        {
-            //if (!Environment.IsExternalStorageManager)
-            //{
-            //    Platform.CurrentActivity.StartActivityForResult(new Intent(Android.Provider.Settings.ActionManageAllFilesAccessPermission), 3);
-            //}
+        public bool CheckPathAccess() => Environment.IsExternalStorageManager;
 
-            return true; // Environment.IsExternalStorageManager;
-        }
+        public void RequestPathAccess() 
+            => Platform.CurrentActivity.StartActivityForResult(new Intent(Android.Provider.Settings.ActionManageAllFilesAccessPermission), 3);
     }
 }

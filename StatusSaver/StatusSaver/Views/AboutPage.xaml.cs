@@ -18,12 +18,5 @@ namespace StatusSaver.Views
             InitializeComponent();
             BindingContext = Startup.ServiceProvider.GetService<AboutPageViewModel>();
         }
-
-        protected override bool OnBackButtonPressed()
-        {
-            var bc = BindingContext as AboutPageViewModel;
-            bc.OnBackButtonPressed();
-            return true;
-        }
     }
 }

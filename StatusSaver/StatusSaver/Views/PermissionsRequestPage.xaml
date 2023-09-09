@@ -5,14 +5,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Shell.NavBarIsVisible="False"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
             <Label
                 HorizontalOptions="CenterAndExpand"
-                Text="Welcome to Xamarin.Forms!, I need your permission"
+                Text="I need your permission to scan your folders for WhatsApp media"
                 VerticalOptions="CenterAndExpand" />
-            <Button Command="{Binding GrantPermissions}" Text="Grant" />
+            <Button Command="{Binding GrantPermissions}" Text="Grant Permissions" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

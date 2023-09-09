@@ -3,10 +3,10 @@ using Android.Widget;
 using StatusSaver.DependencyServices;
 using StatusSaver.Droid.DependencyServices;
 
-[assembly: Xamarin.Forms.Dependency(typeof(MessengerAndroid))]
+[assembly: Xamarin.Forms.Dependency(typeof(AndroidMessenger))]
 namespace StatusSaver.Droid.DependencyServices
 {
-    public class MessengerAndroid : IMessenger
+    public class AndroidMessenger : IMessenger
     {
         public void LongAlert(string message)
         {

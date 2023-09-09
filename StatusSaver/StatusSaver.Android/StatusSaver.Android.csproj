@@ -17,7 +17,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
@@ -66,22 +66,22 @@
     <PackageReference Include="Xamarin.Android.Binding.Mp4Parser">
       <Version>1.1.22</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2083" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyServices\MessengerAndroid.cs" />
-    <Compile Include="DependencyServices\ThumbnailGeneratorAndroid.cs" />
-    <Compile Include="DependencyServices\VideoJoinerAndroid.cs" />
+    <Compile Include="DependencyServices\AndroidMessenger.cs" />
+    <Compile Include="DependencyServices\AndroidThumbnailGenerator.cs" />
+    <Compile Include="DependencyServices\AndroidVideoJoiner.cs" />
     <Compile Include="Effects\AndroidLongPressedEffect.cs" />
     <Compile Include="Effects\AndroidPressedEffect.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DependencyServices\PathManagerAndroid.cs" />
+    <Compile Include="DependencyServices\AndroidPathManager.cs" />
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
-  <ItemGroup>    
+  <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />

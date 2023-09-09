@@ -1,5 +1,7 @@
-﻿using System;
+﻿using StatusSaver.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,11 @@ namespace StatusSaver.Services.Abstract
         void SaveMultiple(string[] paths, FileType type, string name = "file");
 
         void SaveVideosAsOne(string[] paths, string name = "video");
+
+        void LoadImages(ObservableCollection<Image> images);
+        
+        void LoadVideos(ObservableCollection<Video> videos);
+        
         void ClearAppCache();
     }
 

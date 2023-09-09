@@ -47,11 +47,14 @@
             <ShellContent ContentTemplate="{DataTemplate local:VideosPage}" />
         </Tab>
         <Tab
-            Title="About"
+            Title="Saved"
             Icon="about.png"
             Route="about">
-            <ShellContent ContentTemplate="{DataTemplate local:AboutPage}" />
+            <ShellContent Title="Images" Icon="about.png" ContentTemplate="{DataTemplate local:AboutPage}" />
+            <ShellContent Title="Videos" Icon="about.png" ContentTemplate="{DataTemplate local:AboutPage}" />
         </Tab>
     </TabBar>
+
+    <ShellContent Route="requestpermission" ContentTemplate="{DataTemplate local:PermissionsRequestPage}" />
 
 </Shell>

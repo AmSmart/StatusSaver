@@ -3,11 +3,9 @@ using StatusSaver.Services.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Xamarin.Essentials;
-using Xamarin.Forms;
+using System.Collections.ObjectModel;
+using StatusSaver.Models;
 
 namespace StatusSaver.ServicesConcrete
 {
@@ -19,18 +17,22 @@ namespace StatusSaver.ServicesConcrete
         private readonly string _appImagesStoragePath;
         private readonly string _appVideosStoragePath;
         private readonly string _appCachePath;
+        private readonly IEnumerable<string> _statusResourcesPaths;
         private readonly IVideoJoiner _videoJoiner;
+        private readonly IThumbnailGenerator _thumbnailGenerator;
 
-        public MediaManager(IPathManager pathManager, IVideoJoiner videoJoiner)
+        public MediaManager(IPathManager pathManager, IVideoJoiner videoJoiner,
+            IThumbnailGenerator thumbnailGenerator)
         {
             _appStoragePath = pathManager.GetAppStoragePath();
             _appImagesStoragePath = pathManager.GetImagesStoragePath();
             _appVideosStoragePath = pathManager.GetVideosStoragePath();
             _appCachePath = pathManager.GetAppCachePath();
-
-            InitialiseDirectories();
-            
+            _statusResourcesPaths = pathManager.GetStatusResourcesPaths();
+            _thumbnailGenerator = thumbnailGenerator;
             _videoJoiner = videoJoiner;
+
+            InitialiseDirectories();            
         }
 
         public void SaveSingle(string path, FileType type, string name = DefaultFileName)
@@ -82,14 +84,59 @@ namespace StatusSaver.ServicesConcrete
             }
         }
 
-
-
         public void SaveVideosAsOne(string[] paths, string name = DefaultFileName)
         {
             string dateTime = DateTime.Now.ToString("yyyyMMddTHH-mm-ss");
             string outputVideoName = $"{name}-{dateTime}{Path.GetExtension(paths[0])}";
             string outputVideoPath = Path.Combine(_appVideosStoragePath, outputVideoName);
             _videoJoiner.MergeVideos(paths, outputVideoPath);            
+        }
+
+        public void LoadImages(ObservableCollection<Image> images)
+        {
+            List<string> allImageUrls = new List<string>();
+
+            foreach (var path in _statusResourcesPaths)
+            {
+                if (Directory.Exists(path))
+                {
+                    var files = Directory.GetFiles(path).Where(x => x.EndsWith(".jpg"));
+                    allImageUrls.AddRange(files);
+                }
+            }
+
+            images.Clear();
+            foreach (string url in allImageUrls)
+            {
+                images.Add(new Image
+                {
+                    Path = url
+                });
+            }
+        }
+
+        public void LoadVideos(ObservableCollection<Video> videos)
+        {
+            List<string> allVideoUrls = new List<string>();
+            foreach (var path in _statusResourcesPaths)
+            {
+                if (Directory.Exists(path))
+                {
+                    var files = Directory.GetFiles(path).Where(x => x.EndsWith(".mp4"));
+                    allVideoUrls.AddRange(files);
+                }
+            }
+
+            videos.Clear();
+            foreach (string url in allVideoUrls)
+            {
+                videos.Add(new Video
+                {
+                    ImageCachePath = _thumbnailGenerator.GenerateThumbnailAsPath(url, 1000, _appCachePath),
+                    ImageSource = null,/*thumbnailGenerator.GenerateThumbnail(url, 1000),*/
+                    Path = url,
+                });
+            }
         }
 
         private void InitialiseDirectories()

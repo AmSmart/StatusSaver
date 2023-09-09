@@ -38,11 +38,6 @@ namespace StatusSaver.ServicesConcrete
             return await CurrentPage.DisplayAlert(title, question, yes, no);
         }
 
-        public void PopPage()
-        {
-            Environment.Exit(0);
-        }
-
         public void UpdateSelectionState(bool selectionModeIsMultiple, IList<ToolbarItem> toolbarItems)
         {
             var color = selectionModeIsMultiple ? Color.Gray : Color.FromHex("2196F3");

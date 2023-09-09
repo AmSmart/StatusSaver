@@ -12,7 +12,7 @@ namespace StatusSaver.Models
     {
         private ImageSource _imageSource;
         private string _path;
-        private Color _backgroundColor;
+        private Color _backgroundColor = Color.White;
         private string _imageCachePath;
 
         public ImageSource ImageSource { get => _imageSource; set => SetProperty(ref _imageSource, value); }

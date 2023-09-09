@@ -16,7 +16,19 @@ namespace StatusSaver.Views
         public PermissionsRequestPage()
         {
             InitializeComponent();
-            BindingContext = Startup.ServiceProvider.GetService<PermissionsRequestedViewModel>();
+            BindingContext = Startup.ServiceProvider.GetService<PermissionsRequestViewModel>();
+        }
+
+        protected override void OnAppearing()
+        {
+            var bc = (PermissionsRequestViewModel)BindingContext;
+            
+            if (bc.CheckAccessGranted())
+            {
+                bc.NavigateHome();
+            }
+
+            base.OnAppearing();
         }
     }
 }

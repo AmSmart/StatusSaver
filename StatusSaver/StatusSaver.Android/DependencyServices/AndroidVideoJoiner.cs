@@ -12,10 +12,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-[assembly: Xamarin.Forms.Dependency(typeof(VideoJoinerAndroid))]
+[assembly: Xamarin.Forms.Dependency(typeof(AndroidVideoJoiner))]
 namespace StatusSaver.Droid.DependencyServices
 {
-    public class VideoJoinerAndroid : IVideoJoiner
+    public class AndroidVideoJoiner : IVideoJoiner
     {
         public void MergeVideos(string[] pathNames, string outputPath)
         {
@@ -25,6 +25,7 @@ namespace StatusSaver.Droid.DependencyServices
             foreach(string path in pathNames )
             {
                 inMovies.Add(MovieCreator.Build(path));
+                //IDataSource source = new Com.Googlecode.Mp4parser.MemoryDataSourceImpl(new byte[] { });
             }
 
             List<List<ITrack>> allTracks = new List<List<ITrack>>();

@@ -16,62 +16,27 @@ namespace StatusSaver
         public App()
         {
             InitializeComponent();
-            Startup.Initialise();            
-            Device.SetFlags(new string[] { "CarouselView_Experimental" });
+            Startup.Initialise();
+            MainPage = new AppShell();
         }
 
-        protected override async void OnStart()
+        protected override void OnStart()
         {
-            if (VersionTracking.IsFirstLaunchEver)
-            {
-                MainPage = new PermissionsRequestPage();
-                return;
-            }
+            //if (VersionTracking.IsFirstLaunchEver)
+            //{
+            //    MainPage = new PermissionsRequestPage();
+            //    return;
+            //}
 
-            var permissionStatus = await CheckPermissionStatus();
             
-            if (permissionStatus)
-            {
-                MainPage = new AppShell();
-                return;
-            }
-
-            MainPage = new PermissionsDeniedPage();
         }
 
         protected override void OnSleep()
         {
         }
 
-        protected override async void OnResume()
+        protected override void OnResume()
         {
-            var permissionGranted = await CheckPermissionStatus();
-
-            switch (Current.MainPage)
-            {
-                case AppShell shell when !permissionGranted:
-                    Current.MainPage = new PermissionsDeniedPage();
-                    return;
-
-                case PermissionsDeniedPage page when permissionGranted:
-                    Current.MainPage = new AppShell();
-                    return;
-
-                default:
-                    return;
-            }
-        }
-
-        private async Task<bool> CheckPermissionStatus()
-        {
-            var readPermissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
-            var writePermissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
-
-            if(readPermissionStatus == PermissionStatus.Granted && writePermissionStatus == PermissionStatus.Granted)
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace StatusSaver.Models
     public class Image : ObservableObject
     {
         private string _path;
-        private Color _backgroundColor;
+        private Color _backgroundColor = Color.White;
 
         public string Path { get => _path; set => SetProperty(ref _path, value); }
 

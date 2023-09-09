@@ -23,19 +23,18 @@ namespace StatusSaver.ViewModels
         private Color _backgroundColor;
 
         private readonly IPageManager _pageManager;
-        private readonly IThumbnailGenerator _thumbnailGenerator;
         private readonly IMediaManager _mediaManager;
         private readonly IMessenger _messenger;
         private bool _isRefreshing;
         private readonly Color _selectedStateColor = Color.DodgerBlue;
         private readonly Color _unselectedStateColor = Color.White;
-        private readonly IEnumerable<string> _statusResourcesPaths;
         private readonly string _appCachePath;
         private readonly IList<ToolbarItem> _toolbarItems;
 
 
         public VideosPageViewModel(IPathManager pathManager, IPageManager pageManager,
-            IThumbnailGenerator thumbnailGenerator, IMediaManager mediaManager, IMessenger message)
+            IThumbnailGenerator thumbnailGenerator, IMediaManager mediaSaver,
+            IMessenger messenger)
         {
             BackgroundColor = Color.White;
             SelectionMode = SelectionMode.None;
@@ -73,19 +72,17 @@ namespace StatusSaver.ViewModels
                     Command = Cancel
                 }
             };
-
-            _statusResourcesPaths = pathManager.GetStatusResourcesPaths();
+            
             _appCachePath = pathManager.GetAppCachePath();
 
+            _pageManager = pageManager;
+            _mediaManager = mediaSaver;
+            _messenger = messenger;
+            
             Task.Run(() =>
             {
-                LoadData(thumbnailGenerator);
+                _mediaManager.LoadVideos(Videos);                
             });
-
-            _pageManager = pageManager;
-            _thumbnailGenerator = thumbnailGenerator;
-            _mediaManager = mediaManager;
-            _messenger = message;
         }
 
         private void OnRefresh(object obj)
@@ -93,34 +90,9 @@ namespace StatusSaver.ViewModels
             Task.Run(() =>
             {
                 _mediaManager.ClearAppCache();
-                LoadData(_thumbnailGenerator);
+                _mediaManager.LoadVideos(Videos);
                 IsRefreshing = false;
             });
-        }
-
-        private void LoadData(IThumbnailGenerator thumbnailGenerator)
-        {
-            List<string> allVideoUrls = new List<string>();
-            foreach (var path in _statusResourcesPaths)
-            {
-                if (Directory.Exists(path))
-                {
-                    var files = Directory.GetFiles(path).Where(x => x.EndsWith(".mp4"));
-                    allVideoUrls.AddRange(files);
-                }
-            }
-             
-            Videos.Clear();
-            foreach (string url in allVideoUrls)
-            {
-                Videos.Add(new Video
-                {
-                    ImageCachePath = thumbnailGenerator.GenerateThumbnailAsPath(url, 1000, _appCachePath),
-                    ImageSource = null,/*thumbnailGenerator.GenerateThumbnail(url, 1000),*/
-                    Path = url,
-                    BackgroundColor = _unselectedStateColor
-                });
-            }
         }
 
         public ObservableCollection<Video> Videos { get; set; }
@@ -152,6 +124,8 @@ namespace StatusSaver.ViewModels
             get => _isRefreshing;
             set => SetProperty(ref _isRefreshing, value);
         }
+
+        public bool ReadyToClose { get; set; }
 
         public ICommand RefreshList { get; set; }
 
@@ -332,11 +306,8 @@ namespace StatusSaver.ViewModels
             }
             else
             {
-                bool exit = await _pageManager.ExitPrompt();
-                if (exit)
-                {
-                    _pageManager.PopPage();
-                }
+                ReadyToClose = true;
+                _messenger.ShortAlert("Go back again to exit");
             }
         }
     }

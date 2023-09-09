@@ -5,10 +5,10 @@ using StatusSaver.Droid.DependencyServices;
 using System.IO;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(ThumbnailGeneratorAndroid))]
+[assembly: Dependency(typeof(AndroidThumbnailGenerator))]
 namespace StatusSaver.Droid.DependencyServices
 {
-    public class ThumbnailGeneratorAndroid : IThumbnailGenerator
+    public class AndroidThumbnailGenerator : IThumbnailGenerator
     {
         public ImageSource GenerateThumbnailImageSource(string url, long usecond)
         {

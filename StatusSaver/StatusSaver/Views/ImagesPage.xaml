@@ -17,9 +17,10 @@
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
-        <StackLayout>
-            <RefreshView Command="{Binding RefreshList}" IsRefreshing="{Binding IsRefreshing}">
-                <CollectionView
+        <AbsoluteLayout x:Name="abs">
+                <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
+                    <RefreshView Command="{Binding RefreshList}" IsRefreshing="{Binding IsRefreshing}">
+                        <CollectionView
                     x:Name="colView"
                     BackgroundColor="{Binding BackgroundColor}"
                     ItemsLayout="VerticalGrid, 2"
@@ -28,28 +29,47 @@
                     SelectionChangedCommand="{Binding SelectionChanged}"
                     SelectionMode="{Binding SelectionMode, Mode=OneWay}">
 
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
 
-                            <Grid Padding="10" BackgroundColor="{Binding BackgroundColor}">
-                                <Image
+                                    <Grid Padding="10" BackgroundColor="{Binding BackgroundColor}">
+                                        <Image
                                     effects:LongPressedEffect.Command="{Binding Source={x:Reference root}, Path=BindingContext.LongPressed}"
                                     effects:LongPressedEffect.CommandParameter="{Binding .}"
                                     effects:PressedEffect.Command="{Binding Source={x:Reference root}, Path=BindingContext.SingleTap}"
                                     effects:PressedEffect.CommandParameter="{Binding .}"
                                     Aspect="AspectFill"
                                     Source="{Binding Path}">
-                                    <Image.Effects>
-                                        <effects:LongPressedEffect />
-                                        <effects:PressedEffect />
-                                    </Image.Effects>
-                                </Image>
-                            </Grid>
+                                            <Image.Effects>
+                                                <effects:LongPressedEffect />
+                                                <effects:PressedEffect />
+                                            </Image.Effects>
+                                        </Image>
+                                    </Grid>
 
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </RefreshView>
-        </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </RefreshView>
+                </StackLayout>
+
+                <StackLayout x:Name="fabs" IsVisible="True" AbsoluteLayout.LayoutBounds="0.99,0.99,60,200" AbsoluteLayout.LayoutFlags="PositionProportional">
+                    <!--                
+                // Unused Button Properties //
+                Command="{Binding Record}"
+                ImageSource="{StaticResource FontImageSourceRecordGlyph}"
+                IsEnabled="{Binding PageButtonsClickable}"                
+                -->
+                    <Button                                                                        
+                        CornerRadius="30"
+                        HeightRequest="60" />
+                    <Button                                                                        
+                        CornerRadius="30"
+                        HeightRequest="60" />
+                    <Button                                                                        
+                        CornerRadius="30"
+                        HeightRequest="60" />
+                </StackLayout>
+            </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

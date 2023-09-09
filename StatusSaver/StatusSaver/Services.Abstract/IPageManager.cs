@@ -17,8 +17,6 @@ namespace StatusSaver.ServicesAbstract
         
         Task<bool> ExitPrompt();
 
-        void PopPage();
-
         void UpdateSelectionState(bool selectionModeIsMultiple, IList<ToolbarItem> toolbarItems);
     }
 }
