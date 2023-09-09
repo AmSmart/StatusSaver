@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="StausSaver.Maui.Pages.VideosPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:StatusSaver.Maui.ViewModels"
+    Title="VideosPage"
+    x:DataType="viewmodels:VideosViewModel">
+
+    <RefreshView Command="{Binding RefreshListCommand}" IsRefreshing="{Binding IsBusy}">
+        <CollectionView
+            x:Name="colView"
+            BackgroundColor="DodgerBlue"
+            ItemsLayout="VerticalGrid, 2"
+            ItemsSource="{Binding VideoThumbnails}"
+            SelectionMode="Multiple">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid Padding="10">
+                        <Image Aspect="AspectFill" Source="{Binding .}">
+                            <!--<Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="" CommandParameter="{Binding .}" />
+                        </Image.GestureRecognizers>-->
+                        </Image>
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+
+</ContentPage>
+
+<!--
+    SelectionChangedCommand=""
+    SelectionMode=""
+-->

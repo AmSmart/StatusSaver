@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="StausSaver.Maui.Pages.PermissionsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:StatusSaver.Maui.ViewModels"
+    Title="PermissionsPage"
+    x:DataType="viewmodels:PermissionsViewModel"
+    Shell.NavBarIsVisible="False">
+    <VerticalStackLayout
+        Background="AliceBlue"
+        HorizontalOptions="Center"
+        VerticalOptions="Center">
+        <Label
+            HorizontalOptions="Center"
+            Text="We need your permission to the 'Media' folder to make the app work. Click button below to grant access"
+            VerticalOptions="Center" />
+
+        <Button
+            Margin="0,20,0,0"
+            Command="{Binding AllowAccessCommand}"
+            Text="Allow Access" />
+    </VerticalStackLayout>
+</ContentPage>
