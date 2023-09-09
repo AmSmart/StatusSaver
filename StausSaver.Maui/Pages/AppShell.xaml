@@ -4,30 +4,35 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:StausSaver.Maui.Pages"
-    Shell.FlyoutBehavior="Disabled"
     xmlns:viewmodels="clr-namespace:StausSaver.Maui.ViewModels"
-    x:DataType="viewmodels:ShellViewModel">
+    x:DataType="viewmodels:ShellViewModel"
+    Shell.FlyoutBehavior="Disabled">
 
     <ShellContent ContentTemplate="{DataTemplate pages:PermissionsPage}" />
-    
+
     <TabBar>
-        <Tab Title="{Binding Images.Title}" 
-             Icon="{Binding Images.Icon}"
-             Route="ImagesPage">
+
+        <Tab
+            Title="{Binding Images.Title}"
+            Icon="{Binding Images.Icon}"
+            Route="ImagesPage">
             <ShellContent ContentTemplate="{DataTemplate pages:ImagesPage}" />
         </Tab>
 
-        <Tab Title="{Binding Videos.Title}"
-             Icon="{Binding Videos.Title}"
-             Route="VideosPage">
+        <Tab
+            Title="{Binding Videos.Title}"
+            Icon="{Binding Videos.Title}"
+            Route="VideosPage">
             <ShellContent ContentTemplate="{DataTemplate pages:VideosPage}" />
         </Tab>
 
-        <Tab Title="{Binding Gallery.Title}"
-             Icon="{Binding Gallery.Icon}"
-             Route="GalleryPage">
+        <Tab
+            Title="{Binding Gallery.Title}"
+            Icon="{Binding Gallery.Icon}"
+            Route="GalleryPage">
             <ShellContent ContentTemplate="{DataTemplate pages:GalleryPage}" />
         </Tab>
+
     </TabBar>
 
 </Shell>

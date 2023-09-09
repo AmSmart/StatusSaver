@@ -1,7 +1,4 @@
-﻿using Android.Content;
-using AndroidX.DocumentFile.Provider;
-using CommunityToolkit.Maui.Alerts;
-using StatusSaver.Maui.Services;
+﻿using StatusSaver.Maui.Services;
 using StatusSaver.Maui.Services.MediaService;
 using StausSaver.Maui;
 using StausSaver.Maui.Pages;

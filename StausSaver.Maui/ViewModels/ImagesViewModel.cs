@@ -8,7 +8,6 @@ namespace StatusSaver.Maui.ViewModels;
 public partial class ImagesViewModel : ViewModelBase
 {
     private readonly MediaService _mediaService;
-
     [ObservableProperty]
     private SelectionMode _selectionMode;
 
@@ -18,14 +17,15 @@ public partial class ImagesViewModel : ViewModelBase
     public ImagesViewModel(MediaService mediaService)
     {
         _mediaService = mediaService;
-        _selectionMode = SelectionMode.None;
-        _imageUris = _mediaService.GetWhatsappMedia(MediaType.Image)
+
+        SelectionMode = SelectionMode.None;
+        ImageUris = _mediaService.GetWhatsappMedia(MediaType.Image)
             .Select(x => x.ToString())
             .ToObservableCollection();
     }
 
     [RelayCommand]
-    async void RefreshList()
+    async Task RefreshList()
     {
         IsBusy = true;
         await Task.Delay(3000);
@@ -39,7 +39,7 @@ public partial class ImagesViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    async void ViewImage(string selectedImageUri)
+    async Task ViewImage(string selectedImageUri)
     {
         var navigationParameters = new Dictionary<string, object>
         {
