@@ -4,36 +4,37 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewmodels="clr-namespace:StatusSaver.Maui.ViewModels"
-    Title="VideosPage"
-    x:DataType="viewmodels:VideosViewModel">
+    x:Name="ThisPage"
+    Title="VideosPage">
 
     <RefreshView Command="{Binding RefreshListCommand}" IsRefreshing="{Binding IsBusy}">
         <CollectionView
             x:Name="colView"
-            BackgroundColor="DodgerBlue"
+            BackgroundColor="White"
             ItemsLayout="VerticalGrid, 2"
-            ItemsSource="{Binding VideoThumbnails}"
-            SelectionMode="Multiple">
+            ItemsSource="{Binding VideoUris}"
+            SelectionChangedCommand="{Binding HandleSelectionChangedCommand}"
+            SelectionMode="{Binding SelectionMode}">
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-
-                    <Grid Padding="10">
-                        <Image Aspect="AspectFill" Source="{Binding .}">
-                            <!--<Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="" CommandParameter="{Binding .}" />
-                        </Image.GestureRecognizers>-->
+                    <Frame Margin="5" Padding="0">
+                        <Image
+                            Aspect="AspectFill"
+                            HeightRequest="200"
+                            MaximumHeightRequest="200"
+                            Source="{Binding Item2}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding PlayVideoCommand, Source={x:RelativeSource AncestorType={x:Type viewmodels:VideosViewModel}}}"
+                                    CommandParameter="{Binding Item1}"
+                                    NumberOfTapsRequired="1" />
+                            </Image.GestureRecognizers>
                         </Image>
-                    </Grid>
-
+                    </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
     </RefreshView>
 
 </ContentPage>
-
-<!--
-    SelectionChangedCommand=""
-    SelectionMode=""
--->

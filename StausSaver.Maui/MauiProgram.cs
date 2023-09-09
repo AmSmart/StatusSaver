@@ -2,8 +2,6 @@
 using StatusSaver.Maui.ViewModels;
 using StausSaver.Maui.Pages;
 using StausSaver.Maui.Services;
-using Microsoft.Maui.Handlers;
-using Microsoft.Maui.Platform;
 
 namespace StausSaver.Maui;
 public static class MauiProgram
@@ -14,6 +12,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkitMediaElement()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -23,13 +22,6 @@ public static class MauiProgram
         builder.ConfigurePages()
             .ConfigureServices()
             .ConfigureViewModels();
-
-//#if ANDROID
-//        ImageHandler.Mapper.PrependToMapping(nameof(Microsoft.Maui.IImage.Source), (handler, view) =>
-//        {
-//            handler.PlatformView.Clear();
-//        });
-//#endif
 
         return builder.Build();
     }

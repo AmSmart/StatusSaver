@@ -1,12 +1,7 @@
 ﻿using CommunityToolkit.Maui.Core.Extensions;
-using StausSaver.Maui.Services;
 using StausSaver.Maui.ViewModels;
-using StausSaver.Maui;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StatusSaver.Maui.Services.MediaService;
+using StausSaver.Maui.Pages;
 
 namespace StatusSaver.Maui.ViewModels;
 
@@ -41,5 +36,16 @@ public partial class ImagesViewModel : ViewModelBase
     void HandleSelectionChanged()
     {
 
+    }
+    
+    [RelayCommand]
+    async void ViewImage(string selectedImageUri)
+    {
+        var navigationParameters = new Dictionary<string, object>
+        {
+            { nameof(ImageUris),  ImageUris },
+            { "CurrentImageUri", selectedImageUri }
+        };
+        await Shell.Current.GoToAsync(nameof(ImageViewerPage), navigationParameters);
     }
 }

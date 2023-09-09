@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="StausSaver.Maui.Pages.VideoPlayerPage"
-             Title="VideoPlayerPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+<ContentPage
+    x:Class="StausSaver.Maui.Pages.VideoPlayerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodels="clr-namespace:StatusSaver.Maui.ViewModels"
+    Title="VideoPlayerPage"
+    x:DataType="viewmodels:VideoPlayerViewModel"
+    BackgroundColor="Black"
+    Shell.TabBarIsVisible="False">
+    <!--<Frame.GestureRecognizers>
+            <SwipeGestureRecognizer Command="{Binding SwipeRightCommand}" Direction="Right" />
+            <SwipeGestureRecognizer Command="{Binding SwipeLeftCommand}" Direction="Left" />
+        </Frame.GestureRecognizers>-->
+
+    <toolkit:MediaElement
+        ShouldAutoPlay="True"
+        ShouldShowPlaybackControls="True"
+        Source="{Binding CurrentVideoUri}" />
+
 </ContentPage>

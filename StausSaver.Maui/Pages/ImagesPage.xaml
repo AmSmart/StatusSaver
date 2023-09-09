@@ -19,11 +19,18 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Padding="25">
-                        <Image Aspect="AspectFit" Source="{Binding .}">
-                            <!--<Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="" CommandParameter="{Binding .}" />
-                </Image.GestureRecognizers>-->
+                    <Frame Margin="5" Padding="0">
+                        <Image
+                            Aspect="AspectFill"
+                            HeightRequest="200"
+                            MaximumHeightRequest="200"
+                            Source="{Binding .}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding ViewImageCommand, Source={RelativeSource AncestorType={x:Type viewmodels:ImagesViewModel}}}"
+                                    CommandParameter="{Binding .}"
+                                    NumberOfTapsRequired="1" />
+                            </Image.GestureRecognizers>
                         </Image>
                     </Frame>
                 </DataTemplate>

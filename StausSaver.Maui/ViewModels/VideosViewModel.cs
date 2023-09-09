@@ -1,12 +1,7 @@
 ﻿using CommunityToolkit.Maui.Core.Extensions;
-using StausSaver.Maui.Services;
+using StatusSaver.Maui.Services.MediaService;
+using StausSaver.Maui.Pages;
 using StausSaver.Maui.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StatusSaver.Maui.ViewModels;
 
@@ -15,22 +10,22 @@ public partial class VideosViewModel : ViewModelBase
     private readonly MediaService _mediaService;
 
     [ObservableProperty]
-    private ObservableCollection<string> _videoThumbnails;
+    private SelectionMode _selectionMode;
+
+    [ObservableProperty]
+    private ObservableCollection<Tuple<string, string>> _videoUris;
 
     public VideosViewModel(MediaService mediaService)
     {
+        // TODO: Experiment fastest way to load and display thumbnails
         _mediaService = mediaService;
-        var stopwatch = new Stopwatch();
 
-        stopwatch.Start();
-        _videoThumbnails = _mediaService.GetWhatsappMedia(MediaType.Video)
+        _selectionMode = SelectionMode.None;
+        _videoUris = _mediaService.GetWhatsappMedia(MediaType.Video)
             .AsParallel()
             .Select(x => x.ToString())
-            //.Select(x => _mediaService.GetThumbnailImageSourceFromVideo(x, 50)).ToObservableCollection();
-            .Select(x => _mediaService.GetThumbnailAsPathFromVideo(x, 50, FileSystem.Current.CacheDirectory)).ToObservableCollection();
-        stopwatch.Stop();
-
-        Console.WriteLine($"Time elapsed to load videos: {stopwatch.ElapsedMilliseconds}ms");
+            .Select(x => Tuple.Create(x, _mediaService.GetThumbnailAsPathFromVideo(x, 50, FileSystem.Current.CacheDirectory)))
+            .ToObservableCollection();
     }
 
     [RelayCommand]
@@ -39,6 +34,17 @@ public partial class VideosViewModel : ViewModelBase
         IsBusy = true;
         await Task.Delay(3000);
         IsBusy = false;
+    }
+
+    [RelayCommand]
+    async Task PlayVideo(string selectedVideoUri)
+    {
+        var navigationParameters = new Dictionary<string, object>
+        {
+            { "VideoUris",  VideoUris.Select(x => x.Item1).ToObservableCollection()},
+            { "CurrentVideoUri", selectedVideoUri}
+        };
+        await Shell.Current.GoToAsync(nameof(VideoPlayerPage), navigationParameters);
     }
 
     [RelayCommand]

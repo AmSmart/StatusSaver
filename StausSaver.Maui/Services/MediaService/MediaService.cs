@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Android.Content;
+﻿using Android.Content;
 using AndroidX.DocumentFile.Provider;
 using Directory = System.IO.Directory;
 using Uri = Android.Net.Uri;
@@ -23,8 +17,9 @@ using CommunityToolkit.Maui.Storage;
 using System.Web;
 using Android.Graphics;
 using Path = System.IO.Path;
+using StausSaver.Maui;
 
-namespace StausSaver.Maui.Services;
+namespace StatusSaver.Maui.Services.MediaService;
 
 public class MediaService
 {
@@ -285,7 +280,7 @@ public class MediaService
 
 
         BasicContainer oout = (BasicContainer)new DefaultMp4Builder().Build(movie);
-        Java.IO.FileOutputStream fos = new Java.IO.FileOutputStream(new Java.IO.File(outputPath));
+        FileOutputStream fos = new FileOutputStream(new Java.IO.File(outputPath));
         oout.WriteContainer(fos.Channel);
         fos.Close();
     }
@@ -381,7 +376,7 @@ public class MediaService
                 else
                 {
                     bufferInfo.PresentationTimeUs = extractor.SampleTime;
-                    if (endMs > 0 && bufferInfo.PresentationTimeUs > (endMs * 1000))
+                    if (endMs > 0 && bufferInfo.PresentationTimeUs > endMs * 1000)
                     {
                         //Log.d(LOGTAG, "The current sample is over the trim end time.");
                         break;
@@ -513,7 +508,7 @@ public class MediaService
                     // samples always start with 1 but we start with zero therefore +1
                     timeOfSyncSamples[Array.BinarySearch(track.GetSyncSamples(), currentSample + 1)] = currentTime;
                 }
-                currentTime += (double)delta / (double)track.TrackMetaData.Timescale;
+                currentTime += delta / (double)track.TrackMetaData.Timescale;
                 currentSample++;
 
             }
