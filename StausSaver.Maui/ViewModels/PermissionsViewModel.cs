@@ -21,7 +21,7 @@ public partial class PermissionsViewModel : ViewModelBase
     async Task AllowAccess()
     {
         string folderURIString;
-        string errorMessage = "Permission not granted to requested folder";
+        string errorMessage = "Access Denied! Please grant permission to the media folder to use this app";
 
         try
         {

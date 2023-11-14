@@ -12,6 +12,7 @@
         <Frame.GestureRecognizers>
             <SwipeGestureRecognizer Command="{Binding SwipeRightCommand}" Direction="Right" />
             <SwipeGestureRecognizer Command="{Binding SwipeLeftCommand}" Direction="Left" />
+            <TapGestureRecognizer Command="{Binding SaveImageCommand}" NumberOfTapsRequired="3" />
         </Frame.GestureRecognizers>
 
         <Image Aspect="AspectFit" Source="{Binding CurrentImageUri}" />

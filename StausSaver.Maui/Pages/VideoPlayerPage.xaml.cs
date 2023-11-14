@@ -9,4 +9,9 @@ public partial class VideoPlayerPage : ContentPage
 		InitializeComponent();
 		BindingContext = videoPlayerViewModel;
 	}
+
+    private void ContentPage_Unloaded(object sender, EventArgs e)
+    {
+		mediaElement.Handler?.DisconnectHandler();
+    }
 }

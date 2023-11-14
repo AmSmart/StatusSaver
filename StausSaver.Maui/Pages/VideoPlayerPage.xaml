@@ -8,13 +8,15 @@
     Title="VideoPlayerPage"
     x:DataType="viewmodels:VideoPlayerViewModel"
     BackgroundColor="Black"
-    Shell.TabBarIsVisible="False">
+    Shell.TabBarIsVisible="False"
+    Unloaded="ContentPage_Unloaded">
     <!--<Frame.GestureRecognizers>
             <SwipeGestureRecognizer Command="{Binding SwipeRightCommand}" Direction="Right" />
             <SwipeGestureRecognizer Command="{Binding SwipeLeftCommand}" Direction="Left" />
         </Frame.GestureRecognizers>-->
 
     <toolkit:MediaElement
+        x:Name="mediaElement"
         ShouldAutoPlay="True"
         ShouldShowPlaybackControls="True"
         Source="{Binding CurrentVideoUri}" />

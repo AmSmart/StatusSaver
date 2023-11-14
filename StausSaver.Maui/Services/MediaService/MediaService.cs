@@ -23,18 +23,23 @@ namespace StatusSaver.Maui.Services.MediaService;
 
 public class MediaService
 {
+    const string AppName = "com.smart.whatsapptools";
+    const string MediaFolderPath = "Android/Media";
+    const string UrlEncodedMediaFolderPath = "Android%2FMedia";
+    const string BaseURI = "content://com.android.externalstorage.documents/tree/primary%3A";
     const int DefaultBufferSize = 1 * 1024 * 1024;
+
     Context _context;
     string _deviceMediaPath;
-    string _appName = "com.smart.whatsapptools";
     string _appMediaPath;
 
 
     public MediaService()
     {
         _context = Android.App.Application.Context;
-        _deviceMediaPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
-        _appMediaPath = Path.Combine(_deviceMediaPath, _appName);
+        _deviceMediaPath = Path.Combine(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath,
+            MediaFolderPath);
+        _appMediaPath = Path.Combine(_deviceMediaPath, AppName);
     }
 
     public async Task RequestStoragePermissions()
@@ -66,17 +71,23 @@ public class MediaService
     public async Task<Uri> RequestMediaFolderAccess()
     {
         var cts = new CancellationTokenSource();
-        var result = await FolderPicker.Default.PickAsync("Android/Media", cts.Token);
+        var result = await FolderPicker.Default.PickAsync(MediaFolderPath, cts.Token);
         result.EnsureSuccess();
         var folder = result.Folder;
 
         if (!folder.Path.EndsWith("Android/Media"))
             throw new System.Exception("Invalid folder path");
 
-        const string baseURI = "content://com.android.externalstorage.documents/tree/primary%3A";
+        var contentResolver = Platform.AppContext.ContentResolver;
+        var uri = Uri.Parse(BaseURI + UrlEncodedMediaFolderPath);
+        contentResolver.TakePersistableUriPermission(uri, ActivityFlags.GrantWriteUriPermission);
+        contentResolver.TakePersistableUriPermission(uri, ActivityFlags.GrantReadUriPermission);
+
+
+        
 
         string folderPath = folder.Path.Replace("/storage/emulated/0/", string.Empty, StringComparison.InvariantCulture);
-        var folderURI = Uri.Parse(baseURI + HttpUtility.UrlEncode(folderPath));
+        var folderURI = Uri.Parse(BaseURI + HttpUtility.UrlEncode(folderPath));
 
         return folderURI;
     }
@@ -86,6 +97,15 @@ public class MediaService
         var c = Platform.AppContext.ContentResolver.PersistedUriPermissions.Select(x => x.Uri.ToString());
         return Platform.AppContext.ContentResolver.PersistedUriPermissions
             .Any(x => x.Uri.ToString().ToLower().EndsWith("android%2fmedia"));
+    }
+
+    public byte[] GetFileBytes(string uriString)
+    {
+        var uri = Uri.Parse(uriString);
+        var stream = _context.ContentResolver.OpenInputStream(uri);
+        using var memStream = new MemoryStream();
+        stream.CopyTo(memStream);
+        return memStream.ToArray();
     }
 
     public IEnumerable<Uri> GetWhatsappMedia(MediaType mediaType)
@@ -165,7 +185,7 @@ public class MediaService
         {
             case MediaType.Image:
                 fileName += ".jpg";
-                string imagesPath = Path.Combine(_deviceMediaPath, _appName, "Images");
+                string imagesPath = Path.Combine(_deviceMediaPath, AppName, "Images");
                 if (!Directory.Exists(imagesPath))
                     Directory.CreateDirectory(imagesPath);
 
@@ -174,7 +194,7 @@ public class MediaService
 
             case MediaType.Video:
                 fileName += ".mp4";
-                string videosPath = Path.Combine(_deviceMediaPath, _appName, "Videos");
+                string videosPath = Path.Combine(_deviceMediaPath, AppName, "Videos");
                 if (!Directory.Exists(videosPath))
                     Directory.CreateDirectory(videosPath);
 
@@ -241,7 +261,7 @@ public class MediaService
         }
     }
 
-    void MergeVideos(List<byte[]> videos, string outputPath)
+    private void MergeVideos(List<byte[]> videos, string outputPath)
     {
         List<Movie> inMovies = new List<Movie>();
         Movie movie = new Movie();
@@ -285,7 +305,7 @@ public class MediaService
         fos.Close();
     }
 
-    void SplitVideoWithMuxer(Uri srcUri, string outputPath, int startMs, int endMs)
+    private void SplitVideoWithMuxer(Uri srcUri, string outputPath, int startMs, int endMs)
     {
         // Set up MediaExtractor to read from the source.
         MediaExtractor extractor = new MediaExtractor();
@@ -405,7 +425,7 @@ public class MediaService
         return;
     }
 
-    void SplitVideoWithMp4Parser(byte[] video, string outputPath, int startMs, int endMs)
+    private void SplitVideoWithMp4Parser(byte[] video, string outputPath, int startMs, int endMs)
     {
         IDataSource source = new MemoryDataSourceImpl(video);
         var movie = MovieCreator.Build(source);

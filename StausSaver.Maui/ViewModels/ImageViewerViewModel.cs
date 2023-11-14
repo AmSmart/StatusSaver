@@ -1,4 +1,6 @@
-﻿using StausSaver.Maui.ViewModels;
+﻿using AndroidX.DocumentFile.Provider;
+using StatusSaver.Maui.Services.MediaService;
+using StausSaver.Maui.ViewModels;
 
 namespace StatusSaver.Maui.ViewModels;
 
@@ -11,6 +13,12 @@ public partial class ImageViewerViewModel : ViewModelBase, IQueryAttributable
     private string _currentImageUri;
 
     private int _currentIndex;
+    private readonly MediaService _mediaService;
+
+    public ImageViewerViewModel(MediaService mediaService)
+    {
+        _mediaService = mediaService;
+    }
 
     [RelayCommand]
     void SwipeLeft()
@@ -45,5 +53,12 @@ public partial class ImageViewerViewModel : ViewModelBase, IQueryAttributable
         ImageUris = (ObservableCollection<string>) query[nameof(ImageUris)];
         CurrentImageUri = (string) query[nameof(CurrentImageUri)];
         _currentIndex = ImageUris.IndexOf(CurrentImageUri);
+    }
+
+    [RelayCommand]
+    void SaveImage()
+    {
+        var bytes = _mediaService.GetFileBytes(CurrentImageUri);
+        _mediaService.SaveMedia(bytes, MediaType.Image, $"{Guid.NewGuid()}-{DateTime.Now:dd-MM-yyyy-HH-mm-ss}");
     }
 }
